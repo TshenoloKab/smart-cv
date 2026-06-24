@@ -7,20 +7,31 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
+/**
+ * ✅ CORS FIX (production safe)
+ */
+const corsOptions = {
   origin: "https://smart-cv-ashen.vercel.app",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-}));
+};
 
-app.options("*", cors());
+// MUST be first middleware
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
+/**
+ * Gemini AI setup
+ */
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
+/**
+ * MAIN ROUTE: Analyze CV
+ */
 app.post("/analyze", async (req, res) => {
   try {
     const { resume } = req.body;
@@ -31,7 +42,7 @@ app.post("/analyze", async (req, res) => {
       });
     }
 
-const prompt = `
+    const prompt = `
 You are a professional senior recruiter.
 
 Analyze the resume below.
@@ -55,14 +66,25 @@ ${resume}
       contents: prompt,
     });
 
-const text = response.text.trim();
+    const text = response.text.trim();
 
-const cleaned = text
-  .replace(/```json/g, "")
-  .replace(/```/g, "")
-  .trim();
+    const cleaned = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
 
-res.json(JSON.parse(cleaned));
+    let parsed;
+
+    try {
+      parsed = JSON.parse(cleaned);
+    } catch (err) {
+      console.error("JSON parse failed:", cleaned);
+      return res.status(500).json({
+        error: "AI returned invalid JSON",
+      });
+    }
+
+    res.json(parsed);
 
   } catch (error) {
     console.error(error);
@@ -73,6 +95,18 @@ res.json(JSON.parse(cleaned));
   }
 });
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log(`Server running on port ${process.env.PORT || 5000}`);
+/**
+ * Health check route (useful for Railway)
+ */
+app.get("/", (req, res) => {
+  res.send("SmartCV API is running 🚀");
+});
+
+/**
+ * Start server
+ */
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
