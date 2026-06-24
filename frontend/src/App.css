@@ -1,0 +1,292 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, Arial, sans-serif;
+}
+
+/* ================= THEME ================= */
+
+.app {
+  display: flex;
+  height: 100vh;
+  background: #f6f8ff;
+  color: #0f172a;
+}
+
+.app.dark {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+  width: 240px;
+  padding: 20px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+.app.dark .sidebar {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: 800;
+  color: #4f46e5;
+}
+
+.sidebar-spacer {
+  flex: 1;
+}
+
+/* DARK MODE BUTTON */
+.dark-toggle {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #4f46e5;
+  color: white;
+  font-weight: 600;
+}
+
+.dark-toggle:hover {
+  background: #4338ca;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+/* ================= HEADER ================= */
+
+.topbar {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+/* ================= STATS ================= */
+
+.stats {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.stats span {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+}
+
+/* ================= PANEL ================= */
+
+.panel {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+textarea {
+  width: 100%;
+  height: 160px;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn-row {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #4f46e5;
+  color: white;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+.secondary-btn {
+  background: #e5e7eb;
+  color: #0f172a;
+}
+
+.clear-btn {
+  background: #ef4444;
+  color: white;
+}
+
+/* ================= SCORE ================= */
+
+.score-preview {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inner-circle {
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-number {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+/* ================= MODAL ================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+/* ACTION BUTTONS */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 15px 0;
+}
+
+.copy-btn {
+  background: #10b981;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.export-btn {
+  background: #3b82f6;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+/* SECTIONS */
+.section {
+  margin-top: 15px;
+}
+
+.cv-text {
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* CLOSE BUTTON (SMALLER) */
+.close-btn {
+  margin-top: 15px;
+  width: 100%;
+  background: #111827;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+  }
+}
+/* =========================
+   MODAL FOOTER BUTTONS
+========================= */
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* unified button style */
+.action-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #4f46e5;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+/* close button variation (same theme) */
+.action-btn.close {
+  background: #3730a3;
+}
+
+.action-btn.close:hover {
+  background: #312e81;
+}
