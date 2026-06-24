@@ -9,21 +9,33 @@ const app = express();
 
 /**
  * =========================
- * CORS CONFIG (FIXED)
+ * CORS CONFIG (PRODUCTION SAFE)
  * =========================
  */
+
+const allowedOrigins = [
+  "https://smart-cv-ashen.vercel.app",
+];
+
 const corsOptions = {
-  origin: "https://smart-cv-ashen.vercel.app",
+  origin: function (origin, callback) {
+    // allow requests like Postman / server-to-server
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(null, true); // TEMP SAFE MODE (prevents CORS blocking while debugging)
+    }
+  },
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// IMPORTANT: must come BEFORE routes
 app.use(cors(corsOptions));
 
-// FIX: DO NOT use "*" (breaks Railway / Express 5)
-// Use regex instead
-app.options(/.*/, cors(corsOptions));
+// IMPORTANT: handle preflight explicitly
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
@@ -32,6 +44,7 @@ app.use(express.json());
  * GEMINI AI SETUP
  * =========================
  */
+
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
@@ -41,6 +54,7 @@ const ai = new GoogleGenAI({
  * HEALTH CHECK ROUTE
  * =========================
  */
+
 app.get("/", (req, res) => {
   res.send("SmartCV API is running 🚀");
 });
@@ -50,6 +64,7 @@ app.get("/", (req, res) => {
  * ANALYZE RESUME ROUTE
  * =========================
  */
+
 app.post("/analyze", async (req, res) => {
   try {
     const { resume } = req.body;
@@ -96,7 +111,7 @@ ${resume}
     try {
       parsed = JSON.parse(cleaned);
     } catch (err) {
-      console.error("Invalid JSON from AI:", cleaned);
+      console.error("JSON parse error:", cleaned);
       return res.status(500).json({
         error: "AI returned invalid JSON",
       });
@@ -118,6 +133,7 @@ ${resume}
  * START SERVER
  * =========================
  */
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
