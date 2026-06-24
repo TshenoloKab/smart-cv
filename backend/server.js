@@ -8,7 +8,9 @@ dotenv.config();
 const app = express();
 
 /**
- * ✅ CORS FIX (production safe)
+ * =========================
+ * CORS CONFIG (FIXED)
+ * =========================
  */
 const corsOptions = {
   origin: "https://smart-cv-ashen.vercel.app",
@@ -16,21 +18,37 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// MUST be first middleware
+// IMPORTANT: must come BEFORE routes
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+
+// FIX: DO NOT use "*" (breaks Railway / Express 5)
+// Use regex instead
+app.options(/.*/, cors(corsOptions));
 
 app.use(express.json());
 
 /**
- * Gemini AI setup
+ * =========================
+ * GEMINI AI SETUP
+ * =========================
  */
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
 /**
- * MAIN ROUTE: Analyze CV
+ * =========================
+ * HEALTH CHECK ROUTE
+ * =========================
+ */
+app.get("/", (req, res) => {
+  res.send("SmartCV API is running 🚀");
+});
+
+/**
+ * =========================
+ * ANALYZE RESUME ROUTE
+ * =========================
  */
 app.post("/analyze", async (req, res) => {
   try {
@@ -78,7 +96,7 @@ ${resume}
     try {
       parsed = JSON.parse(cleaned);
     } catch (err) {
-      console.error("JSON parse failed:", cleaned);
+      console.error("Invalid JSON from AI:", cleaned);
       return res.status(500).json({
         error: "AI returned invalid JSON",
       });
@@ -87,7 +105,7 @@ ${resume}
     res.json(parsed);
 
   } catch (error) {
-    console.error(error);
+    console.error("Server error:", error);
 
     res.status(500).json({
       error: error.message,
@@ -96,14 +114,9 @@ ${resume}
 });
 
 /**
- * Health check route (useful for Railway)
- */
-app.get("/", (req, res) => {
-  res.send("SmartCV API is running 🚀");
-});
-
-/**
- * Start server
+ * =========================
+ * START SERVER
+ * =========================
  */
 const PORT = process.env.PORT || 5000;
 
