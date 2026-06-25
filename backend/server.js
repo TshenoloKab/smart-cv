@@ -9,33 +9,29 @@ const app = express();
 
 /**
  * =========================
- * CORS CONFIG (PRODUCTION SAFE)
+ * CORS CONFIG (SAFE & SIMPLE)
  * =========================
  */
 
-const allowedOrigins = [
-  "https://smart-cv-ashen.vercel.app",
-];
-
 const corsOptions = {
-  origin: function (origin, callback) {
-    // allow requests like Postman / server-to-server
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(null, true); // TEMP SAFE MODE (prevents CORS blocking while debugging)
-    }
-  },
-  methods: ["GET", "POST", "OPTIONS"],
+  origin: "https://smart-cv-ashen.vercel.app",
+  methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
 
-// IMPORTANT: handle preflight explicitly
-app.options("*", cors(corsOptions));
+/**
+ * IMPORTANT:
+ * DO NOT manually handle app.options("*")
+ * Express + cors handles preflight automatically
+ */
+
+/**
+ * =========================
+ * BODY PARSER
+ * =========================
+ */
 
 app.use(express.json());
 
@@ -111,7 +107,7 @@ ${resume}
     try {
       parsed = JSON.parse(cleaned);
     } catch (err) {
-      console.error("JSON parse error:", cleaned);
+      console.error("AI JSON parse error:", cleaned);
       return res.status(500).json({
         error: "AI returned invalid JSON",
       });
