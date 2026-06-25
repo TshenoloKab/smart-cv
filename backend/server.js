@@ -9,7 +9,7 @@ const app = express();
 
 /**
  * =========================
- * CORS CONFIG (SAFE & SIMPLE)
+ * CORS CONFIG
  * =========================
  */
 
@@ -20,19 +20,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-/**
- * IMPORTANT:
- * DO NOT manually handle app.options("*")
- * Express + cors handles preflight automatically
- */
-
-/**
- * =========================
- * BODY PARSER
- * =========================
- */
-
 app.use(express.json());
 
 /**
@@ -47,7 +34,7 @@ const ai = new GoogleGenAI({
 
 /**
  * =========================
- * HEALTH CHECK ROUTE
+ * HEALTH CHECK
  * =========================
  */
 
@@ -57,13 +44,19 @@ app.get("/", (req, res) => {
 
 /**
  * =========================
- * ANALYZE RESUME ROUTE
+ * ANALYZE RESUME ROUTE (FIXED)
  * =========================
  */
 
 app.post("/analyze", async (req, res) => {
-  res.json({ ok: true });
-});
+  try {
+    const { resume } = req.body;
+
+    if (!resume) {
+      return res.status(400).json({
+        error: "No resume provided",
+      });
+    }
 
     const prompt = `
 You are a professional senior recruiter.
@@ -107,12 +100,12 @@ ${resume}
       });
     }
 
-    res.json(parsed);
+    return res.json(parsed);
 
   } catch (error) {
     console.error("Server error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       error: error.message,
     });
   }
