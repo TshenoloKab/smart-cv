@@ -25,7 +25,7 @@ function App() {
     try {
       setLoading(true);
 
-      const response = await axios.post("https://smart-cv-production.up.railway.app/analyze", {
+      const response = await axios.post("https://smart-cv-production.bba5.up.railway.app/analyze", {
         resume,
       });
 
