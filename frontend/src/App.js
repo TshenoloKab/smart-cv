@@ -25,9 +25,12 @@ function App() {
     try {
       setLoading(true);
 
-      const response = await axios.post("https://smart-cv-production.bba5.up.railway.app/analyze", {
-        resume,
-      });
+      const response = await axios.post(
+        "https://smart-cv-production-bba5.up.railway.app/analyze",
+        {
+          resume,
+        }
+      );
 
       setAnalysis(response.data);
       setShowModal(false);
@@ -55,10 +58,6 @@ function App() {
     if (score >= 50) return "#facc15";
     return "#ef4444";
   };
-
-  /* =========================
-     COPY + EXPORT
-  ========================= */
 
   const copyToClipboard = () => {
     const text = `
@@ -109,7 +108,6 @@ ${analysis.improvedCV}
 
   return (
     <div className={darkMode ? "app dark" : "app"}>
-
       {/* SIDEBAR */}
       <div className="sidebar">
         <div className="brand">🧠 SmartCV</div>
@@ -228,9 +226,7 @@ ${analysis.improvedCV}
                 <p className="cv-text">{analysis.improvedCV}</p>
               </div>
 
-              {/* FOOTER BUTTONS */}
               <div className="modal-footer">
-
                 <button className="action-btn" onClick={copyToClipboard}>
                   📋 Copy
                 </button>
@@ -245,7 +241,6 @@ ${analysis.improvedCV}
                 >
                   Close
                 </button>
-
               </div>
 
             </div>
