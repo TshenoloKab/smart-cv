@@ -35,11 +35,11 @@ function App() {
       setAnalysis(response.data);
       setShowModal(false);
     } catch (err) {
-      alert("Error analyzing resume");
       console.log(err);
+      alert("Error analyzing resume");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const clearAll = () => {
@@ -124,11 +124,11 @@ ${analysis.improvedCV}
 
       {/* MAIN */}
       <div className="main">
-
         {/* HEADER */}
         <div className={`topbar ${showHeader ? "fade-in" : ""}`}>
           <p className="subtitle">
-            Analyze. Improve. Get Hired.<br />
+            Analyze. Improve. Get Hired.
+            <br />
             AI-powered CV feedback in seconds
           </p>
 
@@ -200,7 +200,6 @@ ${analysis.improvedCV}
         {showModal && (
           <div className="modal-overlay" onClick={() => setShowModal(false)}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
-
               <h2>AI Resume Report</h2>
 
               <div className="section">
@@ -242,11 +241,9 @@ ${analysis.improvedCV}
                   Close
                 </button>
               </div>
-
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
