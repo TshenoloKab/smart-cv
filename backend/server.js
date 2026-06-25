@@ -62,14 +62,8 @@ app.get("/", (req, res) => {
  */
 
 app.post("/analyze", async (req, res) => {
-  try {
-    const { resume } = req.body;
-
-    if (!resume) {
-      return res.status(400).json({
-        error: "No resume provided",
-      });
-    }
+  res.json({ ok: true });
+});
 
     const prompt = `
 You are a professional senior recruiter.
